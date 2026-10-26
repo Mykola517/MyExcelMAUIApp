@@ -1,5 +1,5 @@
 <Solution>
-  <Project Path="../LabCalculator/LabCalculator.csproj" />
+  <Project Path="LabCalculator/LabCalculator.csproj" />
   <Project Path="MyExcelMAUIApp.csproj">
     <Deploy Solution="Debug|*" />
   </Project>
