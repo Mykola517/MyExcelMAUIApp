@@ -194,9 +194,20 @@ namespace MyExcelMAUIApp
             RefreshGrid();
         }
 
-        private void DeleteRowButton_Clicked(object? sender, EventArgs e)
+        private async void DeleteRowButton_Clicked(object? sender, EventArgs e)
         {
-            table.DeleteRow();
+            string input = await DisplayPromptAsync("Видалення рядка",
+                "Введіть номер рядка (1-" + table.RowCount + "):",
+                "Видалити", "Скасувати", "1", maxLength: 5, keyboard: Keyboard.Numeric);
+            if (string.IsNullOrWhiteSpace(input)) return;
+
+            int number;
+            if (!int.TryParse(input, out number) || !table.DeleteRowAt(number - 1))
+            {
+                await DisplayAlert("Помилка", "Неправильний номер рядка", "OK");
+                return;
+            }
+
             RecalculateIfNeeded();
             RefreshGrid();
         }
@@ -208,9 +219,20 @@ namespace MyExcelMAUIApp
             RefreshGrid();
         }
 
-        private void DeleteColumnButton_Clicked(object? sender, EventArgs e)
+        private async void DeleteColumnButton_Clicked(object? sender, EventArgs e)
         {
-            table.DeleteColumn();
+            string input = await DisplayPromptAsync("Видалення стовпчика",
+                "Введіть назву стовпчика (A-" + Spreadsheet.GetColumnName(table.ColumnCount) + "):",
+                "Видалити", "Скасувати", "A", maxLength: 3);
+            if (string.IsNullOrWhiteSpace(input)) return;
+
+            int index;
+            if (!Spreadsheet.TryGetColumnIndex(input, out index) || !table.DeleteColumnAt(index))
+            {
+                await DisplayAlert("Помилка", "Неправильна назва стовпчика", "OK");
+                return;
+            }
+
             RecalculateIfNeeded();
             RefreshGrid();
         }

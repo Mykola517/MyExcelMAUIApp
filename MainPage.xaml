@@ -4,26 +4,6 @@
              xmlns:local="clr-namespace:MyExcelMAUIApp"
              x:Class="MyExcelMAUIApp.MainPage">
 
-    <ContentPage.MenuBarItems>
-        <MenuBarItem Text="Файл">
-            <MenuFlyoutItem Text="Зберегти" Clicked="SaveButton_Clicked" />
-            <MenuFlyoutItem Text="Прочитати" Clicked="ReadButton_Clicked" />
-            <MenuFlyoutItem Text="Вийти" Clicked="ExitButton_Clicked" />
-        </MenuBarItem>
-        <MenuBarItem Text="Таблиця">
-            <MenuFlyoutItem Text="Порахувати" Clicked="CalculateButton_Clicked" />
-            <MenuFlyoutItem Text="Перемкнути режим ВИРАЗ/ЗНАЧЕННЯ" Clicked="ModeButton_Clicked" />
-            <MenuFlyoutItem Text="Додати рядок" Clicked="AddRowButton_Clicked" />
-            <MenuFlyoutItem Text="Видалити рядок" Clicked="DeleteRowButton_Clicked" />
-            <MenuFlyoutItem Text="Додати стовпчик" Clicked="AddColumnButton_Clicked" />
-            <MenuFlyoutItem Text="Видалити стовпчик" Clicked="DeleteColumnButton_Clicked" />
-        </MenuBarItem>
-        <MenuBarItem Text="Довідка">
-            <MenuFlyoutItem Text="Довідка" Clicked="HelpButton_Clicked" />
-            <MenuFlyoutItem Text="Про програму" Clicked="AboutButton_Clicked" />
-        </MenuBarItem>
-    </ContentPage.MenuBarItems>
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />

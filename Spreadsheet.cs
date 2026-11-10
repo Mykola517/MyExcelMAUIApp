@@ -43,7 +43,7 @@ namespace MyExcelMAUIApp
         }
 
         public int ColumnCount
-        { 
+        {
             get
             {
                 if (cells.Count == 0)
@@ -84,9 +84,11 @@ namespace MyExcelMAUIApp
             AddRow(ColumnCount);
         }
 
-        public void DeleteRow()
+        public bool DeleteRowAt(int index)
         {
-            if (RowCount > 1) cells.RemoveAt(RowCount - 1);
+            if (RowCount <= 1 || index < 0 || index >= RowCount) return false;
+            cells.RemoveAt(index);
+            return true;
         }
 
         public void AddColumn()
@@ -94,12 +96,26 @@ namespace MyExcelMAUIApp
             foreach (var row in cells) row.Add(new Cell());
         }
 
-        public void DeleteColumn()
+        public bool DeleteColumnAt(int index)
         {
-            if (ColumnCount > 1)
+            if (ColumnCount <= 1 || index < 0 || index >= ColumnCount) return false;
+            foreach (var row in cells) row.RemoveAt(index);
+            return true;
+        }
+        public static bool TryGetColumnIndex(string name, out int index)
+        {
+            index = 0;
+            if (string.IsNullOrWhiteSpace(name)) return false;
+
+            foreach (char ch in name.Trim().ToUpper())
             {
-                foreach (var row in cells) row.RemoveAt(row.Count - 1);
+                if (ch < 'A' || ch > 'Z') return false;
+                index = index * 26 + (ch - 'A' + 1);
+                if (index > 1000000) return false;
             }
+
+            index = index - 1;
+            return true;
         }
 
         public static string GetColumnName(int colIndex)
