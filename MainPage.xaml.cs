@@ -6,8 +6,8 @@ namespace MyExcelMAUIApp
 {
     public partial class MainPage : ContentPage
     {
-        const int CountColumn = 10;
-        const int CountRow = 15;
+        const int CountColumn = 5;
+        const int CountRow = 10;
 
         Spreadsheet table = new Spreadsheet(CountRow, CountColumn);
         bool showValues = false;
@@ -23,54 +23,54 @@ namespace MyExcelMAUIApp
             if (showValues) table.Calculate();
         }
 
+        private Label CreateHeader(string text, int row, int col)
+        {
+            var label = new Label
+            {
+                Text = text,
+                FontAttributes = FontAttributes.Bold,
+                HorizontalTextAlignment = TextAlignment.Center,
+                VerticalTextAlignment = TextAlignment.Center
+            };
+            Grid.SetRow(label, row);
+            Grid.SetColumn(label, col);
+            return label;
+        }
+
         private void RefreshGrid()
         {
             grid.Children.Clear();
             grid.RowDefinitions.Clear();
             grid.ColumnDefinitions.Clear();
 
-            for (int col = 0; col < table.ColumnCount + 1; col++)
+            grid.ColumnSpacing = 0;
+            grid.RowSpacing = 0;
+            grid.HorizontalOptions = LayoutOptions.Start;
+            grid.VerticalOptions = LayoutOptions.Start;
+
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(55) });
+            grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(40) });
+            grid.Children.Add(CreateHeader("", 0, 0));
+
+            for (int col = 0; col < table.ColumnCount; col++)
             {
-                grid.ColumnDefinitions.Add(new ColumnDefinition());
-
-                if (col > 0)
-                {
-                    var label = new Label
-                    {
-                        Text = Spreadsheet.GetColumnName(col),
-                        VerticalOptions = LayoutOptions.Center,
-                        HorizontalOptions = LayoutOptions.Center
-                    };
-                    Grid.SetRow(label, 0);
-                    Grid.SetColumn(label, col);
-                    grid.Children.Add(label);
-                }
+                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(100) });
+                grid.Children.Add(CreateHeader(Spreadsheet.GetColumnName(col + 1), 0, col + 1));
             }
-
-            grid.RowDefinitions.Add(new RowDefinition());
 
             for (int row = 0; row < table.RowCount; row++)
             {
-                grid.RowDefinitions.Add(new RowDefinition());
-
-                var label = new Label
-                {
-                    Text = (row + 1).ToString(),
-                    VerticalOptions = LayoutOptions.Center,
-                    HorizontalOptions = LayoutOptions.Center
-                };
-                Grid.SetRow(label, row + 1);
-                Grid.SetColumn(label, 0);
-                grid.Children.Add(label);
+                grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(40) });
+                grid.Children.Add(CreateHeader((row + 1).ToString(), row + 1, 0));
 
                 for (int col = 0; col < table.ColumnCount; col++)
                 {
                     var cell = table.GetCell(row, col);
                     var entry = new Entry
                     {
-                        WidthRequest = 90,
                         IsReadOnly = showValues,
-                        Text = showValues ? cell.DisplayValue : cell.Expression
+                        Text = showValues ? cell.DisplayValue : cell.Expression,
+                        VerticalTextAlignment = TextAlignment.Center
                     };
 
                     if (showValues && cell.Error != null)
@@ -85,6 +85,12 @@ namespace MyExcelMAUIApp
                     grid.Children.Add(entry);
                 }
             }
+            grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1) });
+            var bottomLine = new BoxView { Color = Color.FromArgb("#E6E6E6"), HeightRequest = 1 };
+            Grid.SetRow(bottomLine, table.RowCount + 1);
+            Grid.SetColumn(bottomLine, 1);
+            Grid.SetColumnSpan(bottomLine, table.ColumnCount);
+            grid.Children.Add(bottomLine);
         }
 
         private void Entry_Focused(object? sender, FocusEventArgs e)
